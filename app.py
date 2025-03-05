@@ -1,21 +1,17 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS 
-from waitress import serve
+from flask_cors import CORS
+from waitress import serve  # Import waitress
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from dotenv import load_dotenv
 import os
-
 
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 
-
-CORS(app) 
-
-
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -55,16 +51,6 @@ def add_task():
         db.session.rollback()
         return jsonify({"message": f"Error adding task: {str(e)}"}), 500
 
-# Route to get all tasks
-# @app.route('/tasks', methods=['GET'])
-# def get_tasks():
-#     try:
-#         tasks = Task.query.all()
-#         task_list = [{"id": task.id, "task": task.task, "status": task.status} for task in tasks]
-#         return jsonify({"tasks": task_list}), 200
-
-#     except SQLAlchemyError as e:
-#         return jsonify({"message": f"Error fetching tasks: {str(e)}"}), 500
 # Route to get all tasks
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
@@ -108,7 +94,6 @@ def delete_task(id):
         db.session.rollback()
         return jsonify({"message": f"Error deleting task: {str(e)}"}), 500
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+# Use waitress to serve the app in production
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    serve(app, host='0.0.0.0', port=5000)  # Use waitress to run the app
