@@ -34,7 +34,7 @@ with app.app_context():
     db.create_all()
 
 # Route to add a new task
-@app.route('/tasks', methods=['POST'])
+@app.route('/api/tasks', methods=['POST'])
 def add_task():
     try:
         task_data = request.json
@@ -65,7 +65,7 @@ def add_task():
 #     except SQLAlchemyError as e:
 #         return jsonify({"message": f"Error fetching tasks: {str(e)}"}), 500
 # Route to get all tasks
-@app.route('/tasks', methods=['GET'])
+@app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     try:
         tasks = Task.query.all()  # Fetch all tasks from the database
@@ -76,7 +76,7 @@ def get_tasks():
 
 
 # Route to update a task's status
-@app.route('/tasks/<int:id>', methods=['PUT'])
+@app.route('/api/tasks/<int:id>', methods=['PUT'])
 def update_task(id):
     try:
         task = Task.query.get_or_404(id)
@@ -95,7 +95,7 @@ def update_task(id):
         return jsonify({"message": f"Error updating task: {str(e)}"}), 500
 
 # Route to delete a task
-@app.route('/tasks/<int:id>', methods=['DELETE'])
+@app.route('/api/tasks/<int:id>', methods=['DELETE'])
 def delete_task(id):
     try:
         task = Task.query.get_or_404(id)
@@ -108,4 +108,4 @@ def delete_task(id):
         return jsonify({"message": f"Error deleting task: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001)
